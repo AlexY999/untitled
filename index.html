@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор операционной системы</title>
+    <style>
+        /* Добавьте стили по вашему выбору */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Выбор операционной системы</h1>
+
+<form id="special-parameters">
+    <label for="os-type">1. Тип операционной системы:</label>
+    <select id="os-type" name="os-type" onchange="showAdditionalQuestions()">
+        <option value="Text-based">Text-based (DOS)</option>
+        <option value="Graphical">Graphical</option>
+    </select>
+
+    <div id="additional-questions" style="display: none;">
+        <label for="usage">2. Применение и потребности:</label>
+        <select id="usage" name="usage">
+            <option value="Server Applications">Серверные приложения</option>
+            <option value="Embedded Systems">Встроенные системы</option>
+            <option value="Office Workstations">Офисные рабочие станции</option>
+        </select>
+    </div>
+
+    <div id="additional-questions2" style="display: none;">
+        <label for="price-segment">3. Ценовой сегмент:</label>
+        <select id="price-segment" name="price-segment">
+            <option value="up to 10k">до 10к - малый</option>
+            <option value="more than 10k">больше 10к</option>
+        </select>
+
+        <label for="architecture">4. Архитектура:</label>
+        <select id="architecture" name="architecture">
+            <option value="new">Новая</option>
+            <option value="outdated">Устаревшая</option>
+        </select>
+    </div>
+
+    <button type="button" onclick="selectOS()">Узнать подходящую ОС</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+    function showAdditionalQuestions() {
+        var osType = document.getElementById("os-type").value;
+        var additionalQuestions = document.getElementById("additional-questions");
+        var additionalQuestions2 = document.getElementById("additional-questions2");
+
+        if (osType === "Text-based") {
+            additionalQuestions.style.display = "block";
+            additionalQuestions2.style.display = "none";
+        } else if (osType === "Graphical") {
+            additionalQuestions.style.display = "block";
+            additionalQuestions2.style.display = "block";
+        } else {
+            additionalQuestions.style.display = "none";
+            additionalQuestions2.style.display = "none";
+        }
+    }
+
+    function selectOS() {
+        var osType = document.getElementById("os-type").value;
+        var usage = document.getElementById("usage").value;
+        var priceSegment = document.getElementById("price-segment").value;
+        var architecture = document.getElementById("architecture").value;
+
+        var result = "";
+
+        if (osType === "Text-based") {
+            if (usage === "Server Applications") {
+                result = "Подходящая операционная система для вас: DOS";
+            } else if (usage === "Embedded Systems") {
+                result = "Подходящая операционная система для вас: Linux";
+            }
+        } else if (osType === "Graphical") {
+            if (usage === "Server Applications") {
+                result = "Подходящая операционная система для вас: Digital UNIX";
+            } else if (usage === "Embedded Systems") {
+                result = "Подходящая операционная система для вас: Digital UNIX";
+            }else if (usage === "Office Workstations") {
+                if (priceSegment === "up to 10k") {
+                    result = "Подходящая операционная система для вас: Windows";
+                } else if (priceSegment === "more than 10k") {
+                    result = "Подходящая операционная система для вас: MacOS";
+                    var architectureQuestion = prompt("Архитектура - Устаревшая или Новая?");
+                    result += (architectureQuestion && (architectureQuestion === "Устаревшая" || architectureQuestion === "Новая")) ? " " + architectureQuestion : "";
+                }
+            }
+        }
+
+        document.getElementById("result").innerHTML = result || "Нет подходящей операционной системы.";
+    }
+</script>
+
+
+</body>
+</html>

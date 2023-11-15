@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Выбор операционной системы</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<h1>Выбор операционной системы</h1>
+<form id="osForm">
+  <label>
+    <strong>1. Выберите тип операционной системы:</strong>
+    <br>
+    <input type="radio" name="osType" value="text" required> Текстовый интерфейс (DOS)
+    <br>
+    <input type="radio" name="osType" value="graphical" required> Графический интерфейс
+  </label>
+
+  <label>
+    <strong>2. Для каких задач вам нужна операционная система? (Выберите все подходящие варианты):</strong>
+    <br>
+    <input type="radio" name="applications[]" value="server"> Серверные приложения
+    <br>
+    <input type="radio" name="applications[]" value="embedded"> Встроенные системы
+    <br>
+    <input type="radio" name="applications[]" value="office"> Офисные рабочие станции
+  </label>
+
+  <label>
+    <strong>3. Какой ценовой сегмент вы рассматриваете?</strong>
+    <br>
+    <input type="radio" name="price" value="under10k" required> До 10 000
+    <br>
+    <input type="radio" name="price" value="over10k" required> От 10 000 и выше
+  </label>
+
+  <label>
+    <strong>4. Какая архитектура вас интересует?</strong>
+    <br>
+    <input type="radio" name="architecture" value="old" required> Застарелая
+    <br>
+    <input type="radio" name="architecture" value="new" required> Новая
+  </label>
+
+  <label>
+    <strong>5. Требуется ли вам поддержка многозадачности?</strong>
+    <br>
+    <input type="radio" name="multitasking" value="yes"> Да
+    <br>
+    <input type="radio" name="multitasking" value="no"> Нет
+  </label>
+
+  <button type="button" onclick="suggestOS()">Подобрать ОС</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+  function suggestOS() {
+    // Збираємо відповіді користувача
+    const form = document.getElementById('osForm');
+    const formData = new FormData(form);
+
+    // Визначаємо тип інтерфейсу
+    const osType = formData.get('osType');
+
+    let suggestedOS = "";
+
+    // Логіка для текстового інтерфейсу
+    if (osType === 'text') {
+      const applications = formData.getAll('applications[]');
+
+      if (applications.includes('server')) {
+        const multitasking = formData.get('multitasking');
+        if (multitasking === 'yes') {
+          suggestedOS = "Рекомендується використовувати операційну систему FREEBSD для серверних застосувань з підтримкою многозадачності.";
+        } else {
+          suggestedOS = "Рекомендується використовувати операційну систему DOS для серверних застосувань без підтримки многозадачності.";
+        }
+      } else if (applications.includes('embedded') || applications.includes('office')) {
+        suggestedOS = "Рекомендується використовувати операційну систему Linux.";
+      }
+      // Логіка для графічного інтерфейсу
+    } else if (osType === 'graphical') {
+      const applications = formData.getAll('applications[]');
+
+      if (applications.includes('office')) {
+        // Логіка для офісних робочих станцій
+        const price = formData.get('price');
+        const architecture = formData.get('architecture');
+
+        if (price === 'under10k') {
+          suggestedOS = "Рекомендується використовувати операційну систему Windows для офісних робочих станцій у недорогому ціновому сегменті.";
+        } else if (price === 'over10k' && architecture === 'new') {
+          suggestedOS = "Рекомендується використовувати операційну систему MACOS X для офісних робочих станцій у дорогому ціновому сегменті з новою архітектурою.";
+        } else if (price === 'over10k' && architecture === 'old') {
+          suggestedOS = "Рекомендується використовувати операційну систему MacOS 9 для офісних робочих станцій у дорогому ціновому сегменті зі старою архітектурою.";
+        }
+      } else if (applications.includes('server') || applications.includes('embedded')) {
+        suggestedOS = "Рекомендується використовувати операційну систему Digital UNIX для серверних застосувань або вбудованих систем.";
+      }
+    }
+
+    // Виводимо результат
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = suggestedOS || "Не вдалося знайти відповідну операційну систему для ваших умов.";
+  }
+</script>
+</body>
+</html>
